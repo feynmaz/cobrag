@@ -21,13 +21,19 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		addInt(args)
+		fstatus, _ := cmd.Flags().GetBool("float")
+
+		if fstatus {
+			addFloat(args)
+		} else {
+			addInt(args)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-
+	addCmd.Flags().BoolP("float", "f", false, "Add Floating Numbers")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
@@ -51,4 +57,16 @@ func addInt(args []string) {
 		sum = sum + itemp
 	}
 	fmt.Printf("Addition of numbers %s is %d\n", args, sum)
+}
+
+func addFloat(args []string) {
+	var sum float64
+	for _, fval := range args {
+		ftemp, err := strconv.ParseFloat(fval, 64)
+		if err != nil {
+			fmt.Println(err)
+		}
+		sum = sum + ftemp
+	}
+	fmt.Printf("Sum of floating numbers %s is %f\n", args, sum)
 }
